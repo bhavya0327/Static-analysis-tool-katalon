@@ -1,0 +1,27 @@
+plugins {
+    id 'groovy'
+    id 'codenarc'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Necessary for CodeNarc to understand the Groovy DSL ruleset
+    implementation 'org.codehaus.groovy:groovy-all:3.0.17'
+}
+
+codenarc {
+    toolVersion = '3.4.0'
+    // Point this to your downloaded file
+    configFile = file("${project.rootDir}/codenarc.ruleset")
+    reportFormat = 'html'
+}
+
+tasks.withType(CodeNarc) {
+    // Specifically targets Katalon's folder structure
+    source = fileTree(dir: 'Keywords', include: '**/*.groovy') + 
+             fileTree(dir: 'Scripts', include: '**/*.groovy')
+    ignoreFailures = true
+}
